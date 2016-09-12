@@ -91,8 +91,9 @@ ex7Tests = [ testF1 "solve test" solve
               , ([Red, Green], [Move [Red, Red] 1 0, Move [Red, Green] 2 0])
               , ([Red, Red, Green], [Move [Red, Red, Red] 2 0, Move [Red, Red, Green] 3 0])
               , ([Red, Red, Blue], [Move [Red, Red, Red] 2 0, Move [Red, Red, Green] 2 0, Move [Red, Red, Blue] 3 0])
-              , ([Red, Green, Red], [Move [Red, Red, Red] 2 0, Move [Red, Red, Green] 1 1, Move [Red, Green, Red] 3 0])
+              , ([Red, Green, Red], [Move [Red, Red, Red] 2 0, Move [Red, Red, Green] 1 2, Move [Red, Green, Red] 3 0])
             ]
+           ]
 
 -- Bonus ----------------------------------------------
 
