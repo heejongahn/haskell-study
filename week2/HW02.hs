@@ -33,14 +33,13 @@ exactMatches (x:xs) (y:ys)
 
 -- For each peg in xs, count how many times is occurs in ys
 countColors :: Code -> [Int]
-countColors xs = map (checkColors xs) colors
+countColors xs = map (countColor xs) colors
 
-checkColors :: Code -> Peg -> Int
-checkColors [] _ = 0
-checkColors (x:xs) p
-  | x == p = 1 + checkColors xs p
-  | otherwise = checkColors xs p
-
+countColor :: Code -> Peg -> Int
+countColor [] _ = 0
+countColor (x:xs) p
+  | x == p    = 1 + countColor xs p
+  | otherwise = countColor xs p
 
 -- Count number of matches between the actual code and the guess
 matches :: Code -> Code -> Int
@@ -69,25 +68,23 @@ filterCodes m cs = filter (isConsistent m) cs
 
 allCodes :: Int -> [Code]
 allCodes 1 = map (\x -> [x]) colors
-allCodes n = foldr (++) [] $ map (concatMap (allCodes (n-1))) colors
-  where concatMap :: [Code] -> Peg -> [Code]
-        concatMap c p = map ((++) [p]) c
+allCodes n = [x:y | x <- colors, y <- allCodes(n-1)]
 
 -- Exercise 7 -----------------------------------------
 
-guess :: Code -> [Code] -> Move
-guess c [] = undefined
-guess c cs = getMove c $ head cs
+guessMove :: Code -> [Code] -> Move
+guessMove _ [] = error "We're out of possible moves!"
+guessMove c cs = getMove c $ head cs
 
-guessList :: Code -> [Code] -> [Move]
-guessList c cs
+guessMoves :: Code -> [Code] -> [Move]
+guessMoves c cs
   | length cs == 1  = []
-  | otherwise       = [g] ++ guessList c (filterCodes g cs)
+  | otherwise       = [g] ++ guessMoves c (filterCodes g cs)
     where
-      g = guess c cs
+      g = guessMove c cs
 
 solve :: Code -> [Move]
-solve c = guessList c $ allCodes $ length c
+solve c = guessMoves c $ allCodes $ length c
 
 -- Bonus ----------------------------------------------
 
