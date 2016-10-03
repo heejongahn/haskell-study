@@ -18,6 +18,8 @@ library
                      , week1
                      , week2
                      , week3
+                     , week4
+                     , week5
   build-depends:       base >= 4.7 && < 5
   default-language:    Haskell2010
 
