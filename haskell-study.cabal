@@ -20,6 +20,7 @@ library
                      , week3
                      , week4
                      , week5
+                     , week6
   build-depends:       base >= 4.7 && < 5
                      , bytestring
                      , containers
