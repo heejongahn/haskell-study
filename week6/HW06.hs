@@ -2,20 +2,21 @@
 module HW06 where
 
 import Data.List
-import Data.Functor
 
 -- Exercise 1 -----------------------------------------
 
 fib :: Integer -> Integer
-fib = undefined
+fib n
+  | n `elem` (0, 1) = 1
+  | otherwise       = fib (n-1) + fib (n-2)
 
 fibs1 :: [Integer]
-fibs1 = undefined
+fibs1 = map fib [0..]
 
 -- Exercise 2 -----------------------------------------
 
 fibs2 :: [Integer]
-fibs2 = undefined
+fibs2 = 1 : 1 : (zipWith (+) fibs2 $ tail fibs2)
 
 -- Exercise 3 -----------------------------------------
 
@@ -27,40 +28,45 @@ instance Show a => Show (Stream a) where
              ++ ",..."
 
 streamToList :: Stream a -> [a]
-streamToList = undefined
+streamToList (Cons x nextStream) = x : streamToList nextStream
 
 -- Exercise 4 -----------------------------------------
 
 instance Functor Stream where
-    fmap = undefined
+  fmap f (Cons x nextStream) = Cons (f x) (fmap f nextStream)
 
 -- Exercise 5 -----------------------------------------
 
 sRepeat :: a -> Stream a
-sRepeat = undefined
+sRepeat x = Cons x (sRepeat x)
 
 sIterate :: (a -> a) -> a -> Stream a
-sIterate = undefined
+sIterate f x = Cons x (sIterate f (f x))
 
 sInterleave :: Stream a -> Stream a -> Stream a
-sInterleave (Cons _ _) _ = undefined
+sInterleave (Cons a b) second = Cons a (sInterleave second b)
 
 sTake :: Int -> Stream a -> [a]
-sTake = undefined
+sTake n (Cons a b)
+  | n == 0 = []
+  | otherwise = a : sTake (n-1) b
 
 -- Exercise 6 -----------------------------------------
 
 nats :: Stream Integer
-nats = undefined
+nats = sIterate (+1) 0
 
 ruler :: Stream Integer
-ruler = undefined
+ruler = sInterleave (sRepeat 0) $ fmap (+1) $ ruler
 
 -- Exercise 7 -----------------------------------------
 
+next :: Int -> Int
+next n = (110351245 * n + 12345) `mod` 2147483648
+
 -- | Implementation of C rand
 rand :: Int -> Stream Int
-rand = undefined
+rand r0 = Cons r0 (rand $ next r0)
 
 -- Exercise 8 -----------------------------------------
 
@@ -73,7 +79,9 @@ minMaxSlow xs = Just (minimum xs, maximum xs)
 
 {- Total Memory in use: ??? MB -}
 minMax :: [Int] -> Maybe (Int, Int)
-minMax = undefined
+minMax [] = Nothing
+minMax [x] = Just (x, x)
+minMax (x:xs) = fmap (\(pMin, pMax) -> ((min pMin x), (max pMax x))) $ minMax xs
 
 main :: IO ()
 main = print $ minMaxSlow $ sTake 1000000 $ rand 7666532
