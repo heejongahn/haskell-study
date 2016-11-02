@@ -21,11 +21,15 @@ library
                      , week4
                      , week5
                      , week6
+                     , week7
   build-depends:       base >= 4.7 && < 5
                      , bytestring
                      , containers
                      , aeson
                      , bits
+                     , vector
+                     , MonadRandom
+                     , random
   default-language:    Haskell2010
 
 executable haskell-study-exe
